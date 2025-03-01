@@ -17,6 +17,30 @@ with open(
     first_block = json.loads(data)
 
 with open(
+    Path(__file__).parent / "Json" / "secondblock.json", encoding="utf-8"
+) as complex_data:
+    data = complex_data.read()
+    second_block = json.loads(data)
+
+with open(
+    Path(__file__).parent / "Json" / "thirdblock.json", encoding="utf-8"
+) as complex_data:
+    data = complex_data.read()
+    third_block = json.loads(data)
+
+with open(
+    Path(__file__).parent / "Json" / "fourthblock.json", encoding="utf-8"
+) as complex_data:
+    data = complex_data.read()
+    fourth_block = json.loads(data)
+
+with open(
+    Path(__file__).parent / "Json" / "fifthblock.json", encoding="utf-8"
+) as complex_data:
+    data = complex_data.read()
+    fifth_block = json.loads(data)
+
+with open(
     Path(__file__).parent / "Json" / "themes_names.json", encoding="utf-8"
 ) as complex_data:
     data = complex_data.read()
@@ -33,6 +57,41 @@ FIRST_BLOCK = [
     first_block["eighth"],
 ]
 
+SECOND_BLOCK = [
+    second_block["first"],
+    second_block["second"],
+    second_block["third"],
+    second_block["fourth"],
+    second_block["fifth"],
+    second_block["sixth"],
+    second_block["seventh"],
+    second_block["eighth"],
+]
+
+THIRD_BLOCK = [
+    third_block["first"],
+    third_block["second"],
+    third_block["third"],
+]
+
+FOURTH_BLOCK = [
+    fourth_block["first"],
+    fourth_block["second"],
+    fourth_block["third"],
+    fourth_block["fourth"],
+    fourth_block["fifth"],
+    fourth_block["sixth"],
+    fourth_block["seventh"],
+]
+
+FIFTH_BLOCK = [
+    fifth_block["first"],
+    fifth_block["second"],
+    fifth_block["third"],
+    fifth_block["fourth"],
+    fifth_block["fifth"],
+]
+
 THEMES_NAMES = [
     themes_names["first_theme"],
     themes_names["second_theme"],
@@ -41,7 +100,6 @@ THEMES_NAMES = [
     themes_names["fifth_theme"],
     themes_names["sixth_theme"],
     themes_names["seventh_theme"],
-    themes_names["eighth_theme"],
 ]
 
 
@@ -74,7 +132,7 @@ async def help_command(message: Message):
 @dp.message(Command("teory"))
 async def teory(message: Message):
     builder = InlineKeyboardBuilder()
-    for i in range(0, 8):  # Создаем 7 кнопок
+    for i in range(0, 7):
         builder.add(InlineKeyboardButton(text=f"{THEMES_NAMES[i]}", callback_data=f"teory_{i}"))
     builder.adjust(1)  # Располагаем кнопки в один столбец
     await message.answer(
@@ -100,63 +158,176 @@ async def process_first_block_callback(callback: CallbackQuery):
     thirteenth_image_path = Path(__file__).parent / "Image" / "FirstTheme" / "13.jpg"
 
     await callback.message.answer(
-        "Вы выбрали теорию по теме: \nКлассификация и номенклатура органических веществ"
+        f"Вы выбрали теорию по теме: \n{THEMES_NAMES[0]}"
+    )
+
+    await bot.send_photo(chat_id=callback.message.chat.id, photo=FSInputFile(first_image_path))
+    await callback.message.answer(FIRST_BLOCK[0])
+    await bot.send_photo(chat_id=callback.message.chat.id, photo=FSInputFile(second_image_path))
+    await callback.message.answer(FIRST_BLOCK[1])
+    await callback.message.answer(FIRST_BLOCK[2])
+    await bot.send_photo(chat_id=callback.message.chat.id, photo=FSInputFile(third_image_path))
+    await bot.send_photo(chat_id=callback.message.chat.id, photo=FSInputFile(fourth_image_path))
+    await callback.message.answer(FIRST_BLOCK[3])
+    await bot.send_photo(chat_id=callback.message.chat.id, photo=FSInputFile(fifth_image_path))
+    await callback.message.answer(FIRST_BLOCK[4])
+    await bot.send_photo(chat_id=callback.message.chat.id, photo=FSInputFile(sixth_image_path))
+    await callback.message.answer(FIRST_BLOCK[5])
+    await bot.send_photo(chat_id=callback.message.chat.id, photo=FSInputFile(seventh_image_path))
+    await callback.message.answer(FIRST_BLOCK[6])
+    await bot.send_photo(chat_id=callback.message.chat.id, photo=FSInputFile(eighth_image_path))
+    await callback.message.answer(FIRST_BLOCK[7])
+    await bot.send_photo(chat_id=callback.message.chat.id, photo=FSInputFile(nineth_image_path))
+    await bot.send_photo(chat_id=callback.message.chat.id, photo=FSInputFile(tenth_image_path))
+    await bot.send_photo(chat_id=callback.message.chat.id, photo=FSInputFile(eleventh_image_path))
+    await bot.send_photo(chat_id=callback.message.chat.id, photo=FSInputFile(tvelveth_image_path))
+    await bot.send_photo(chat_id=callback.message.chat.id, photo=FSInputFile(thirteenth_image_path))
+
+
+@dp.callback_query(F.data.startswith("teory_1"))
+async def process_first_block_callback(callback: CallbackQuery):
+    # Путь к локальному изображению
+    first_image_path = Path(__file__).parent / "Image" / "SecondTheme" / "1.jpg"
+    second_image_path = Path(__file__).parent / "Image" / "SecondTheme" / "2.jpg"
+    third_image_path = Path(__file__).parent / "Image" / "SecondTheme" / "3.jpg"
+    fourth_image_path = Path(__file__).parent / "Image" / "SecondTheme" / "4.jpg"
+    fifth_image_path = Path(__file__).parent / "Image" / "SecondTheme" / "5.jpg"
+    sixth_image_path = Path(__file__).parent / "Image" / "SecondTheme" / "6.jpg"
+    seventh_image_path = Path(__file__).parent / "Image" / "SecondTheme" / "7.jpg"
+    eighth_image_path = Path(__file__).parent / "Image" / "SecondTheme" / "8.jpg"
+    nineth_image_path = Path(__file__).parent / "Image" / "SecondTheme" / "9.jpg"
+    tenth_image_path = Path(__file__).parent / "Image" / "SecondTheme" / "10.jpg"
+
+    await callback.message.answer(
+        f"Вы выбрали теорию по теме: \n{THEMES_NAMES[1]}"
     )
 
     # Отправляем изображение
-
-
+    await callback.message.answer(SECOND_BLOCK[0])
     await bot.send_photo(chat_id=callback.message.chat.id, photo=FSInputFile(first_image_path))
-
-    await callback.message.answer(FIRST_BLOCK[0])
-
-
+    await callback.message.answer(SECOND_BLOCK[1])
     await bot.send_photo(chat_id=callback.message.chat.id, photo=FSInputFile(second_image_path))
-
-    await callback.message.answer(FIRST_BLOCK[1])
-    await callback.message.answer(FIRST_BLOCK[2])
-
-
+    await callback.message.answer(SECOND_BLOCK[2])
     await bot.send_photo(chat_id=callback.message.chat.id, photo=FSInputFile(third_image_path))
-
+    await callback.message.answer(SECOND_BLOCK[3])
     await bot.send_photo(chat_id=callback.message.chat.id, photo=FSInputFile(fourth_image_path))
-
-    await callback.message.answer(FIRST_BLOCK[3])
-
-
+    await callback.message.answer(SECOND_BLOCK[4])
     await bot.send_photo(chat_id=callback.message.chat.id, photo=FSInputFile(fifth_image_path))
-
-    await callback.message.answer(FIRST_BLOCK[4])
-
-
+    await callback.message.answer(SECOND_BLOCK[5])
     await bot.send_photo(chat_id=callback.message.chat.id, photo=FSInputFile(sixth_image_path))
-
-    await callback.message.answer(FIRST_BLOCK[5])
-
-
+    await callback.message.answer(SECOND_BLOCK[6])
     await bot.send_photo(chat_id=callback.message.chat.id, photo=FSInputFile(seventh_image_path))
-
-    await callback.message.answer(FIRST_BLOCK[6])
-
-
     await bot.send_photo(chat_id=callback.message.chat.id, photo=FSInputFile(eighth_image_path))
-
-    await callback.message.answer(FIRST_BLOCK[7])
-
-
+    await callback.message.answer(SECOND_BLOCK[7])
     await bot.send_photo(chat_id=callback.message.chat.id, photo=FSInputFile(nineth_image_path))
-
-
     await bot.send_photo(chat_id=callback.message.chat.id, photo=FSInputFile(tenth_image_path))
 
 
+@dp.callback_query(F.data.startswith("teory_2"))
+async def process_first_block_callback(callback: CallbackQuery):
+    # Путь к локальному изображению
+    first_image_path = Path(__file__).parent / "Image" / "ThirdTheme" / "1.jpg"
+    second_image_path = Path(__file__).parent / "Image" / "ThirdTheme" / "2.jpg"
+    third_image_path = Path(__file__).parent / "Image" / "ThirdTheme" / "3.jpg"
+    fourth_image_path = Path(__file__).parent / "Image" / "ThirdTheme" / "4.jpg"
+    fifth_image_path = Path(__file__).parent / "Image" / "ThirdTheme" / "5.jpg"
+    sixth_image_path = Path(__file__).parent / "Image" / "ThirdTheme" / "6.jpg"
+    seventh_image_path = Path(__file__).parent / "Image" / "ThirdTheme" / "7.jpg"
+    eighth_image_path = Path(__file__).parent / "Image" / "ThirdTheme" / "8.jpg"
+
+    await callback.message.answer(
+        f"Вы выбрали теорию по теме: \n{THEMES_NAMES[2]}"
+    )
+
+    # Отправляем изображение
+    await callback.message.answer(THIRD_BLOCK[0])
+    await bot.send_photo(chat_id=callback.message.chat.id, photo=FSInputFile(first_image_path))
+    await bot.send_photo(chat_id=callback.message.chat.id, photo=FSInputFile(second_image_path))
+    await callback.message.answer(THIRD_BLOCK[1])
+    await bot.send_photo(chat_id=callback.message.chat.id, photo=FSInputFile(third_image_path))
+    await bot.send_photo(chat_id=callback.message.chat.id, photo=FSInputFile(fourth_image_path))
+    await bot.send_photo(chat_id=callback.message.chat.id, photo=FSInputFile(fifth_image_path))
+    await callback.message.answer(THIRD_BLOCK[2])
+    await bot.send_photo(chat_id=callback.message.chat.id, photo=FSInputFile(sixth_image_path))
+    await bot.send_photo(chat_id=callback.message.chat.id, photo=FSInputFile(seventh_image_path))
+    await bot.send_photo(chat_id=callback.message.chat.id, photo=FSInputFile(eighth_image_path))
+
+
+@dp.callback_query(F.data.startswith("teory_3"))
+async def process_first_block_callback(callback: CallbackQuery):
+    # Путь к локальному изображению
+    first_image_path = Path(__file__).parent / "Image" / "FourthTheme" / "1.jpg"
+    second_image_path = Path(__file__).parent / "Image" / "FourthTheme" / "2.jpg"
+    third_image_path = Path(__file__).parent / "Image" / "FourthTheme" / "3.jpg"
+    fourth_image_path = Path(__file__).parent / "Image" / "FourthTheme" / "4.jpg"
+    fifth_image_path = Path(__file__).parent / "Image" / "FourthTheme" / "5.jpg"
+    sixth_image_path = Path(__file__).parent / "Image" / "FourthTheme" / "6.jpg"
+    seventh_image_path = Path(__file__).parent / "Image" / "FourthTheme" / "7.jpg"
+    eighth_image_path = Path(__file__).parent / "Image" / "FourthTheme" / "8.jpg"
+    nineth_image_path = Path(__file__).parent / "Image" / "FourthTheme" / "9.jpg"
+    tenth_image_path = Path(__file__).parent / "Image" / "FourthTheme" / "10.jpg"
+    eleventh_image_path = Path(__file__).parent / "Image" / "FourthTheme" / "11.jpg"
+    tvelveth_image_path = Path(__file__).parent / "Image" / "FourthTheme" / "12.jpg"
+
+    await callback.message.answer(
+        f"Вы выбрали теорию по теме: \n{THEMES_NAMES[3]}"
+    )
+
+    await callback.message.answer(FOURTH_BLOCK[0])
+    await bot.send_photo(chat_id=callback.message.chat.id, photo=FSInputFile(first_image_path))
+    await callback.message.answer(FOURTH_BLOCK[1])
+    await bot.send_photo(chat_id=callback.message.chat.id, photo=FSInputFile(second_image_path))
+    await callback.message.answer(FOURTH_BLOCK[2])
+    await bot.send_photo(chat_id=callback.message.chat.id, photo=FSInputFile(third_image_path))
+    await bot.send_photo(chat_id=callback.message.chat.id, photo=FSInputFile(fourth_image_path))
+    await callback.message.answer(FOURTH_BLOCK[3])
+    await bot.send_photo(chat_id=callback.message.chat.id, photo=FSInputFile(fifth_image_path))
+    await callback.message.answer(FOURTH_BLOCK[4])
+    await bot.send_photo(chat_id=callback.message.chat.id, photo=FSInputFile(sixth_image_path))
+    await callback.message.answer(FOURTH_BLOCK[5])
+    await bot.send_photo(chat_id=callback.message.chat.id, photo=FSInputFile(seventh_image_path))
+    await bot.send_photo(chat_id=callback.message.chat.id, photo=FSInputFile(eighth_image_path))
+    await callback.message.answer(FOURTH_BLOCK[6])
+    await bot.send_photo(chat_id=callback.message.chat.id, photo=FSInputFile(nineth_image_path))
+    await bot.send_photo(chat_id=callback.message.chat.id, photo=FSInputFile(tenth_image_path))
     await bot.send_photo(chat_id=callback.message.chat.id, photo=FSInputFile(eleventh_image_path))
-
-
     await bot.send_photo(chat_id=callback.message.chat.id, photo=FSInputFile(tvelveth_image_path))
 
+@dp.callback_query(F.data.startswith("teory_4"))
+async def process_first_block_callback(callback: CallbackQuery):
+    # Путь к локальному изображению
+    first_image_path = Path(__file__).parent / "Image" / "FifthTheme" / "1.jpg"
+    second_image_path = Path(__file__).parent / "Image" / "FifthTheme" / "2.jpg"
+    third_image_path = Path(__file__).parent / "Image" / "FifthTheme" / "3.jpg"
+    fourth_image_path = Path(__file__).parent / "Image" / "FifthTheme" / "4.jpg"
+    fifth_image_path = Path(__file__).parent / "Image" / "FifthTheme" / "5.jpg"
+    sixth_image_path = Path(__file__).parent / "Image" / "FifthTheme" / "6.jpg"
+    seventh_image_path = Path(__file__).parent / "Image" / "FifthTheme" / "7.jpg"
+    eighth_image_path = Path(__file__).parent / "Image" / "FifthTheme" / "8.jpg"
+    nineth_image_path = Path(__file__).parent / "Image" / "FifthTheme" / "9.jpg"
+    tenth_image_path = Path(__file__).parent / "Image" / "FifthTheme" / "10.jpg"
+    eleventh_image_path = Path(__file__).parent / "Image" / "FifthTheme" / "11.jpg"
 
-    await bot.send_photo(chat_id=callback.message.chat.id, photo=FSInputFile(thirteenth_image_path))
+    await callback.message.answer(
+        f"Вы выбрали теорию по теме: \n{THEMES_NAMES[4]}"
+    )
+
+    await callback.message.answer(FOURTH_BLOCK[0])
+    await bot.send_photo(chat_id=callback.message.chat.id, photo=FSInputFile(first_image_path))
+    await bot.send_photo(chat_id=callback.message.chat.id, photo=FSInputFile(second_image_path))
+    await callback.message.answer(FOURTH_BLOCK[1])
+    await bot.send_photo(chat_id=callback.message.chat.id, photo=FSInputFile(third_image_path))
+    await bot.send_photo(chat_id=callback.message.chat.id, photo=FSInputFile(fourth_image_path))
+    await callback.message.answer(FOURTH_BLOCK[2])
+    await bot.send_photo(chat_id=callback.message.chat.id, photo=FSInputFile(fifth_image_path))
+    await callback.message.answer(FOURTH_BLOCK[3])
+    await bot.send_photo(chat_id=callback.message.chat.id, photo=FSInputFile(sixth_image_path))
+    await bot.send_photo(chat_id=callback.message.chat.id, photo=FSInputFile(seventh_image_path))
+    await bot.send_photo(chat_id=callback.message.chat.id, photo=FSInputFile(eighth_image_path))
+    await bot.send_photo(chat_id=callback.message.chat.id, photo=FSInputFile(nineth_image_path))
+    await callback.message.answer(FOURTH_BLOCK[4])
+    await bot.send_photo(chat_id=callback.message.chat.id, photo=FSInputFile(tenth_image_path))
+    await bot.send_photo(chat_id=callback.message.chat.id, photo=FSInputFile(eleventh_image_path))
 
 
 # Обработчик команды /practis
