@@ -43,7 +43,7 @@ BotForBrother/
 
 ## Требования
 
-- Python 3.8 или выше
+- Python 3.9 или выше
 - aiogram 3.x
 - Зарегистрированный бот в Telegram (получение токена через [@BotFather](https://t.me/BotFather))
 
