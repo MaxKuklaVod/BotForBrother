@@ -88,6 +88,11 @@ with open(
     data = complex_data.read()
     seventh_block_practice = json.loads(data)
 
+with open(
+    Path(__file__).parent / "Json" / "Practices" / "eighthblock.json", encoding="utf-8"
+) as complex_data:
+    data = complex_data.read()
+    eighth_block_practice = json.loads(data)
 
 with open(
     Path(__file__).parent / "Json" / "Themes" / "theor_names.json", encoding="utf-8"
@@ -245,6 +250,19 @@ SEVENTH_BLOCK_PRACTICE = [
     seventh_block_practice["fourth_answer"],
     seventh_block_practice["fifth_hint"],
     seventh_block_practice["fifth_answer"],
+]
+
+EIGHTH_BLOCK_PRACTICE = [
+    eighth_block_practice["first_hint"],
+    eighth_block_practice["first_answer"],
+    eighth_block_practice["second_hint"],
+    eighth_block_practice["second_answer"],
+    eighth_block_practice["third_hint"],
+    eighth_block_practice["third_answer"],
+    eighth_block_practice["fourth_hint"],
+    eighth_block_practice["fourth_answer"],
+    eighth_block_practice["fifth_hint"],
+    eighth_block_practice["fifth_answer"],
 ]
 
 THEOR_NAMES = [
@@ -1488,6 +1506,143 @@ async def process_hint_callback(callback: CallbackQuery):
 @dp.callback_query(F.data == "answer_65")
 async def process_answer_callback(callback: CallbackQuery):
     await callback.message.answer(SEVENTH_BLOCK_PRACTICE[9])
+
+# Обработчик выбора темы
+@dp.callback_query(F.data == "practis_7")
+async def process_practis_callback(callback: CallbackQuery):
+    builder = InlineKeyboardBuilder()
+    for i in range(1, 6):
+        builder.add(
+            InlineKeyboardButton(
+                text=f"Задание {i}", 
+                callback_data=f"_task7{i}"
+            )
+        )
+    builder.adjust(1)
+    await callback.message.answer(
+        f"Вы выбрали практику по теме: \n{PRACT_NAMES[7]}", 
+        reply_markup=builder.as_markup()
+    )
+    await callback.answer()  # Важно!
+
+# Обработчик выбора задания
+@dp.callback_query(F.data == "_task71")  # Точное совпадение
+async def process_task_callback(callback: CallbackQuery):
+    task = Path(__file__).parent / "Image" / "Practices" / "EighthTheme" / "1.jpg"
+    builder = InlineKeyboardBuilder()
+    builder.add(
+        InlineKeyboardButton(text="Подсказка", callback_data="hint_71"),
+        InlineKeyboardButton(text="Решение", callback_data="answer_71"),
+    )
+    await callback.message.answer(
+        "Вы выбрали задание 1", 
+    )
+    await bot.send_photo(chat_id=callback.message.chat.id, photo=FSInputFile(task), reply_markup=builder.as_markup())
+    await callback.answer()
+
+@dp.callback_query(F.data == "hint_71")
+async def process_hint_callback(callback: CallbackQuery):
+    await callback.message.answer(EIGHTH_BLOCK_PRACTICE[0])
+
+@dp.callback_query(F.data == "answer_71")
+async def process_answer_callback(callback: CallbackQuery):
+    await callback.message.answer(EIGHTH_BLOCK_PRACTICE[1])
+    
+
+
+# Обработчик выбора задания
+@dp.callback_query(F.data == "_task72")  # Точное совпадение
+async def process_task_callback(callback: CallbackQuery):
+    task = Path(__file__).parent / "Image" / "Practices" / "EighthTheme" / "2.jpg"
+    builder = InlineKeyboardBuilder()
+    builder.add(
+        InlineKeyboardButton(text="Подсказка", callback_data="hint_72"),
+        InlineKeyboardButton(text="Решение", callback_data="answer_72"),
+    )
+    await callback.message.answer(
+        "Вы выбрали задание 2", 
+    )
+    await bot.send_photo(chat_id=callback.message.chat.id, photo=FSInputFile(task), reply_markup=builder.as_markup())
+    await callback.answer()
+
+@dp.callback_query(F.data == "hint_72")
+async def process_hint_callback(callback: CallbackQuery):
+    await callback.message.answer(EIGHTH_BLOCK_PRACTICE[2])
+
+@dp.callback_query(F.data == "answer_72")
+async def process_answer_callback(callback: CallbackQuery):
+    await callback.message.answer(EIGHTH_BLOCK_PRACTICE[3])
+
+
+# Обработчик выбора задания
+@dp.callback_query(F.data == "_task73")  # Точное совпадение
+async def process_task_callback(callback: CallbackQuery):
+    task = Path(__file__).parent / "Image" / "Practices" / "EighthTheme" / "3.jpg"
+    builder = InlineKeyboardBuilder()
+    builder.add(
+        InlineKeyboardButton(text="Подсказка", callback_data="hint_73"),
+        InlineKeyboardButton(text="Решение", callback_data="answer_73"),
+    )
+    await callback.message.answer(
+        "Вы выбрали задание 3", 
+    )
+    await bot.send_photo(chat_id=callback.message.chat.id, photo=FSInputFile(task), reply_markup=builder.as_markup())
+    await callback.answer()
+
+@dp.callback_query(F.data == "hint_73")
+async def process_hint_callback(callback: CallbackQuery):
+    await callback.message.answer(EIGHTH_BLOCK_PRACTICE[4])
+
+@dp.callback_query(F.data == "answer_73")
+async def process_answer_callback(callback: CallbackQuery):
+    await callback.message.answer(EIGHTH_BLOCK_PRACTICE[5])
+
+# Обработчик выбора задания
+@dp.callback_query(F.data == "_task74")  # Точное совпадение
+async def process_task_callback(callback: CallbackQuery):
+    task = Path(__file__).parent / "Image" / "Practices" / "EighthTheme" / "4.jpg"
+    builder = InlineKeyboardBuilder()
+    builder.add(
+        InlineKeyboardButton(text="Подсказка", callback_data="hint_74"),
+        InlineKeyboardButton(text="Решение", callback_data="answer_74"),
+    )
+    await callback.message.answer(
+        "Вы выбрали задание 4", 
+    )
+    await bot.send_photo(chat_id=callback.message.chat.id, photo=FSInputFile(task), reply_markup=builder.as_markup())
+    await callback.answer()
+
+@dp.callback_query(F.data == "hint_74")
+async def process_hint_callback(callback: CallbackQuery):
+    await callback.message.answer(EIGHTH_BLOCK_PRACTICE[6])
+
+@dp.callback_query(F.data == "answer_74")
+async def process_answer_callback(callback: CallbackQuery):
+    await callback.message.answer(EIGHTH_BLOCK_PRACTICE[7])
+
+
+# Обработчик выбора задания
+@dp.callback_query(F.data == "_task75")  # Точное совпадение
+async def process_task_callback(callback: CallbackQuery):
+    task = Path(__file__).parent / "Image" / "Practices" / "EighthTheme" / "5.jpg"
+    builder = InlineKeyboardBuilder()
+    builder.add(
+        InlineKeyboardButton(text="Подсказка", callback_data="hint_75"),
+        InlineKeyboardButton(text="Решение", callback_data="answer_75"),
+    )
+    await callback.message.answer(
+        "Вы выбрали задание 5", 
+    )
+    await bot.send_photo(chat_id=callback.message.chat.id, photo=FSInputFile(task), reply_markup=builder.as_markup())
+    await callback.answer()
+
+@dp.callback_query(F.data == "hint_75")
+async def process_hint_callback(callback: CallbackQuery):
+    await callback.message.answer(EIGHTH_BLOCK_PRACTICE[8])
+
+@dp.callback_query(F.data == "answer_75")
+async def process_answer_callback(callback: CallbackQuery):
+    await callback.message.answer(EIGHTH_BLOCK_PRACTICE[9])
 
 # Запуск бота
 if __name__ == "__main__":
