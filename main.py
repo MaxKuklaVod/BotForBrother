@@ -2,11 +2,11 @@ import asyncio
 from aiogram import Bot, Dispatcher
 from config import API_TOKEN
 from handlers import register_all_handlers
-from data.loader import load_data
+from data.loader import load_all_data
 
 async def main():
     # Загрузка данных
-    data = load_data()
+    data = load_all_data()
     
     # Инициализация бота и диспетчера
     bot = Bot(token=API_TOKEN)

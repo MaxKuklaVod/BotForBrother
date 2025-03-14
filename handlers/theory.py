@@ -1,279 +1,153 @@
 from aiogram import Dispatcher, Bot, F
 from aiogram.types import Message, CallbackQuery, FSInputFile
 from aiogram.filters import Command
-from config import THEORY_IMAGES_DIR, PARSE_MODE, THEORY_CALLBACK, BACK_TO_THEORY
+from config import (
+    THEORY_IMAGES_DIR,
+    PARSE_MODE,
+    THEORY_CALLBACK,
+    BACK_TO_THEORY
+)
 from utils.keyboards import create_themes_keyboard, create_back_keyboard
+from typing import Dict, Any
 
-async def theory_command(message: Message, data):
+
+async def theory_command(message: Message, data: Dict[str, Any]) -> None:
     """Обработчик команды /theory"""
     keyboard = create_themes_keyboard(data["theor_names"], THEORY_CALLBACK)
     await message.answer(
         "Выберите тему для изучения теории:", reply_markup=keyboard
     )
 
-async def process_first_block_theory(callback: CallbackQuery, bot: Bot, data):
-    """Обработчик для первого блока теории"""
-    theor_names = data["theor_names"]
-    block = data["theory_blocks"][0]
+
+async def process_block_theory(
+    callback: CallbackQuery,
+    bot: Bot,
+    data: Dict[str, Any],
+    block_index: int,
+    theme_folder: str,
+    image_count: int,
+    sequence: list
+) -> None:
+    """Универсальный обработчик блоков теории
     
-    # Пути к изображениям
+    Args:
+        block_index: Индекс блока в data["theory_blocks"]
+        theme_folder: Название папки с изображениями
+        image_count: Количество изображений
+        sequence: Последовательность вывода (0 - текст, 1 - фото)
+    """
+    theor_name = data["theor_names"][block_index]
+    block = data["theory_blocks"][block_index]
     image_paths = [
-        THEORY_IMAGES_DIR / "FirstTheme" / f"{i}.jpg"
-        for i in range(1, 14)
+        THEORY_IMAGES_DIR / theme_folder / f"{i}.jpg"
+        for i in range(1, image_count + 1)
     ]
     
-    await callback.message.answer(
-        f"Вы выбрали теорию по теме: \n{theor_names[0]}"
-    )
+    await callback.message.answer(f"Вы выбрали теорию по теме:\n{theor_name}")
     
-    # Последовательность вывода для первого блока
-    await bot.send_photo(chat_id=callback.message.chat.id, photo=FSInputFile(image_paths[0]))
-    await callback.message.answer(block[0], parse_mode=PARSE_MODE)
-    await bot.send_photo(chat_id=callback.message.chat.id, photo=FSInputFile(image_paths[1]))
-    await callback.message.answer(block[1], parse_mode=PARSE_MODE)
-    await callback.message.answer(block[2], parse_mode=PARSE_MODE)
-    await bot.send_photo(chat_id=callback.message.chat.id, photo=FSInputFile(image_paths[2]))
-    await bot.send_photo(chat_id=callback.message.chat.id, photo=FSInputFile(image_paths[3]))
-    await callback.message.answer(block[3], parse_mode=PARSE_MODE)
-    await bot.send_photo(chat_id=callback.message.chat.id, photo=FSInputFile(image_paths[4]))
-    await callback.message.answer(block[4], parse_mode=PARSE_MODE)
-    await bot.send_photo(chat_id=callback.message.chat.id, photo=FSInputFile(image_paths[5]))
-    await callback.message.answer(block[5], parse_mode=PARSE_MODE)
-    await bot.send_photo(chat_id=callback.message.chat.id, photo=FSInputFile(image_paths[6]))
-    await callback.message.answer(block[6], parse_mode=PARSE_MODE)
-    await bot.send_photo(chat_id=callback.message.chat.id, photo=FSInputFile(image_paths[7]))
-    await callback.message.answer(block[7], parse_mode=PARSE_MODE)
-    await bot.send_photo(chat_id=callback.message.chat.id, photo=FSInputFile(image_paths[8]))
-    await bot.send_photo(chat_id=callback.message.chat.id, photo=FSInputFile(image_paths[9]))
-    await bot.send_photo(chat_id=callback.message.chat.id, photo=FSInputFile(image_paths[10]))
-    await bot.send_photo(chat_id=callback.message.chat.id, photo=FSInputFile(image_paths[11]))
-    await bot.send_photo(chat_id=callback.message.chat.id, photo=FSInputFile(image_paths[12]))
+    text_index = 0
+    image_index = 0
     
-    # Кнопка возврата
+    for element in sequence:
+        try:
+            if element == 0:
+                await callback.message.answer(
+                    block[text_index], parse_mode=PARSE_MODE
+                )
+                text_index += 1
+            elif element == 1:
+                await bot.send_photo(
+                    chat_id=callback.message.chat.id,
+                    photo=FSInputFile(image_paths[image_index])
+                )
+                image_index += 1
+        except IndexError:
+            await callback.message.answer("Ошибка в последовательности блока")
+            break
+    
     keyboard = create_back_keyboard(BACK_TO_THEORY)
     await callback.message.answer("Конец темы", reply_markup=keyboard)
+    await callback.answer()
 
-async def process_second_block_theory(callback: CallbackQuery, bot: Bot, data):
-    """Обработчик для второго блока теории"""
-    theor_names = data["theor_names"]
-    block = data["theory_blocks"][1]
-    
-    # Пути к изображениям
-    image_paths = [
-        THEORY_IMAGES_DIR / "SecondTheme" / f"{i}.jpg"
-        for i in range(1, 11)
-    ]
-    
-    await callback.message.answer(
-        f"Вы выбрали теорию по теме: \n{theor_names[1]}"
-    )
-    
-    # Последовательность вывода для второго блока
-    await callback.message.answer(block[0], parse_mode=PARSE_MODE)
-    await bot.send_photo(chat_id=callback.message.chat.id, photo=FSInputFile(image_paths[0]))
-    await callback.message.answer(block[1], parse_mode=PARSE_MODE)
-    await bot.send_photo(chat_id=callback.message.chat.id, photo=FSInputFile(image_paths[1]))
-    await callback.message.answer(block[2], parse_mode=PARSE_MODE)
-    await bot.send_photo(chat_id=callback.message.chat.id, photo=FSInputFile(image_paths[2]))
-    await callback.message.answer(block[3], parse_mode=PARSE_MODE)
-    await bot.send_photo(chat_id=callback.message.chat.id, photo=FSInputFile(image_paths[3]))
-    await callback.message.answer(block[4], parse_mode=PARSE_MODE)
-    await bot.send_photo(chat_id=callback.message.chat.id, photo=FSInputFile(image_paths[4]))
-    await callback.message.answer(block[5], parse_mode=PARSE_MODE)
-    await bot.send_photo(chat_id=callback.message.chat.id, photo=FSInputFile(image_paths[5]))
-    await callback.message.answer(block[6], parse_mode=PARSE_MODE)
-    await bot.send_photo(chat_id=callback.message.chat.id, photo=FSInputFile(image_paths[6]))
-    await bot.send_photo(chat_id=callback.message.chat.id, photo=FSInputFile(image_paths[7]))
-    await callback.message.answer(block[7], parse_mode=PARSE_MODE)
-    await bot.send_photo(chat_id=callback.message.chat.id, photo=FSInputFile(image_paths[8]))
-    await bot.send_photo(chat_id=callback.message.chat.id, photo=FSInputFile(image_paths[9]))
-    
-    # Кнопка возврата
-    keyboard = create_back_keyboard(BACK_TO_THEORY)
-    await callback.message.answer("Конец темы", reply_markup=keyboard)
 
-async def process_third_block_theory(callback: CallbackQuery, bot: Bot, data):
-    """Обработчик для третьего блока теории"""
-    theor_names = data["theor_names"]
-    block = data["theory_blocks"][2]
-    
-    # Пути к изображениям
-    image_paths = [
-        THEORY_IMAGES_DIR / "ThirdTheme" / f"{i}.jpg"
-        for i in range(1, 9)
-    ]
-    
-    await callback.message.answer(
-        f"Вы выбрали теорию по теме: \n{theor_names[2]}"
-    )
-    
-    # Последовательность вывода для третьего блока
-    await callback.message.answer(block[0], parse_mode=PARSE_MODE)
-    await bot.send_photo(chat_id=callback.message.chat.id, photo=FSInputFile(image_paths[0]))
-    await bot.send_photo(chat_id=callback.message.chat.id, photo=FSInputFile(image_paths[1]))
-    await callback.message.answer(block[1], parse_mode=PARSE_MODE)
-    await bot.send_photo(chat_id=callback.message.chat.id, photo=FSInputFile(image_paths[2]))
-    await bot.send_photo(chat_id=callback.message.chat.id, photo=FSInputFile(image_paths[3]))
-    await bot.send_photo(chat_id=callback.message.chat.id, photo=FSInputFile(image_paths[4]))
-    await callback.message.answer(block[2], parse_mode=PARSE_MODE)
-    await bot.send_photo(chat_id=callback.message.chat.id, photo=FSInputFile(image_paths[5]))
-    await bot.send_photo(chat_id=callback.message.chat.id, photo=FSInputFile(image_paths[6]))
-    await bot.send_photo(chat_id=callback.message.chat.id, photo=FSInputFile(image_paths[7]))
-    
-    # Кнопка возврата
-    keyboard = create_back_keyboard(BACK_TO_THEORY)
-    await callback.message.answer("Конец темы", reply_markup=keyboard)
-
-async def process_fourth_block_theory(callback: CallbackQuery, bot: Bot, data):
-    """Обработчик для четвертого блока теории"""
-    theor_names = data["theor_names"]
-    block = data["theory_blocks"][3]
-    
-    # Пути к изображениям
-    image_paths = [
-        THEORY_IMAGES_DIR / "FourthTheme" / f"{i}.jpg"
-        for i in range(1, 13)
-    ]
-    
-    await callback.message.answer(
-        f"Вы выбрали теорию по теме: \n{theor_names[3]}"
-    )
-    
-    # Последовательность вывода для четвертого блока
-    await callback.message.answer(block[0], parse_mode=PARSE_MODE)
-    await bot.send_photo(chat_id=callback.message.chat.id, photo=FSInputFile(image_paths[0]))
-    await callback.message.answer(block[1], parse_mode=PARSE_MODE)
-    await bot.send_photo(chat_id=callback.message.chat.id, photo=FSInputFile(image_paths[1]))
-    await callback.message.answer(block[2], parse_mode=PARSE_MODE)
-    await bot.send_photo(chat_id=callback.message.chat.id, photo=FSInputFile(image_paths[2]))
-    await bot.send_photo(chat_id=callback.message.chat.id, photo=FSInputFile(image_paths[3]))
-    await callback.message.answer(block[3], parse_mode=PARSE_MODE)
-    await bot.send_photo(chat_id=callback.message.chat.id, photo=FSInputFile(image_paths[4]))
-    await callback.message.answer(block[4], parse_mode=PARSE_MODE)
-    await bot.send_photo(chat_id=callback.message.chat.id, photo=FSInputFile(image_paths[5]))
-    await callback.message.answer(block[5], parse_mode=PARSE_MODE)
-    await bot.send_photo(chat_id=callback.message.chat.id, photo=FSInputFile(image_paths[6]))
-    await bot.send_photo(chat_id=callback.message.chat.id, photo=FSInputFile(image_paths[7]))
-    await callback.message.answer(block[6], parse_mode=PARSE_MODE)
-    await bot.send_photo(chat_id=callback.message.chat.id, photo=FSInputFile(image_paths[8]))
-    await bot.send_photo(chat_id=callback.message.chat.id, photo=FSInputFile(image_paths[9]))
-    await bot.send_photo(chat_id=callback.message.chat.id, photo=FSInputFile(image_paths[10]))
-    await bot.send_photo(chat_id=callback.message.chat.id, photo=FSInputFile(image_paths[11]))
-    
-    # Кнопка возврата
-    keyboard = create_back_keyboard(BACK_TO_THEORY)
-    await callback.message.answer("Конец темы", reply_markup=keyboard)
-
-async def process_fifth_block_theory(callback: CallbackQuery, bot: Bot, data):
-    """Обработчик для пятого блока теории"""
-    theor_names = data["theor_names"]
-    block = data["theory_blocks"][4]
-    
-    # Пути к изображениям
-    image_paths = [
-        THEORY_IMAGES_DIR / "FifthTheme" / f"{i}.jpg"
-        for i in range(1, 7)
-    ]
-    
-    await callback.message.answer(
-        f"Вы выбрали теорию по теме: \n{theor_names[4]}"
-    )
-    
-    # Последовательность вывода для пятого блока
-    await callback.message.answer(block[0], parse_mode=PARSE_MODE)
-    await bot.send_photo(chat_id=callback.message.chat.id, photo=FSInputFile(image_paths[0]))
-    await callback.message.answer(block[1], parse_mode=PARSE_MODE)
-    await bot.send_photo(chat_id=callback.message.chat.id, photo=FSInputFile(image_paths[1]))
-    await callback.message.answer(block[2], parse_mode=PARSE_MODE)
-    await bot.send_photo(chat_id=callback.message.chat.id, photo=FSInputFile(image_paths[2]))
-    await callback.message.answer(block[3], parse_mode=PARSE_MODE)
-    await bot.send_photo(chat_id=callback.message.chat.id, photo=FSInputFile(image_paths[3]))
-    await callback.message.answer(block[4], parse_mode=PARSE_MODE)
-    await bot.send_photo(chat_id=callback.message.chat.id, photo=FSInputFile(image_paths[4]))
-    await bot.send_photo(chat_id=callback.message.chat.id, photo=FSInputFile(image_paths[5]))
-    
-    # Кнопка возврата
-    keyboard = create_back_keyboard(BACK_TO_THEORY)
-    await callback.message.answer("Конец темы", reply_markup=keyboard)
-
-async def process_sixth_block_theory(callback: CallbackQuery, bot: Bot, data):
-    """Обработчик для шестого блока теории"""
-    theor_names = data["theor_names"]
-    block = data["theory_blocks"][5]
-    
-    # Пути к изображениям
-    image_paths = [
-        THEORY_IMAGES_DIR / "SixthTheme" / f"{i}.jpg"
-        for i in range(1, 8)
-    ]
-    
-    await callback.message.answer(
-        f"Вы выбрали теорию по теме: \n{theor_names[5]}"
-    )
-    
-    # Последовательность вывода для шестого блока
-    await callback.message.answer(block[0], parse_mode=PARSE_MODE)
-    await bot.send_photo(chat_id=callback.message.chat.id, photo=FSInputFile(image_paths[0]))
-    await callback.message.answer(block[1], parse_mode=PARSE_MODE)
-    await callback.message.answer(block[2], parse_mode=PARSE_MODE)
-    await callback.message.answer(block[3], parse_mode=PARSE_MODE)
-    await callback.message.answer(block[4], parse_mode=PARSE_MODE)
-    await bot.send_photo(chat_id=callback.message.chat.id, photo=FSInputFile(image_paths[1]))
-    await callback.message.answer(block[5], parse_mode=PARSE_MODE)
-    
-    # Кнопка возврата
-    keyboard = create_back_keyboard(BACK_TO_THEORY)
-    await callback.message.answer("Конец темы", reply_markup=keyboard)
-
-async def back_to_theory(callback: CallbackQuery, data):
+async def back_to_theory(callback: CallbackQuery, data: Dict[str, Any]) -> None:
     """Обработчик возврата к списку тем теории"""
     keyboard = create_themes_keyboard(data["theor_names"], THEORY_CALLBACK)
     await callback.message.answer(
         "Выберите тему для изучения теории:", reply_markup=keyboard
     )
+    await callback.answer()
 
 
-def register_theory_handlers(dp: Dispatcher, bot: Bot, data):
-    """Регистрирует обработчики команд и колбэков для теории"""
+def register_theory_handlers(
+    dispatcher: Dispatcher,
+    bot_instance: Bot,
+    shared_data: Dict[str, Any]
+) -> None:
+    """Регистрация обработчиков для теории"""
     
-    # Правильный способ регистрации для асинхронных обработчиков с параметрами
-    # Создаем отдельные функции-обертки для каждого обработчика
-    
-    # Регистрация команды /theory
-    async def theory_command_handler(message: Message):
-        await theory_command(message, data)
-    
-    dp.message.register(theory_command_handler, Command("theory"))
-    
-    # Регистрация обработчиков для блоков теории
-    async def first_block_handler(callback: CallbackQuery):
-        await process_first_block_theory(callback, bot, data)
-    
-    async def second_block_handler(callback: CallbackQuery):
-        await process_second_block_theory(callback, bot, data)
-    
-    async def third_block_handler(callback: CallbackQuery):
-        await process_third_block_theory(callback, bot, data)
-    
-    async def fourth_block_handler(callback: CallbackQuery):
-        await process_fourth_block_theory(callback, bot, data)
-    
-    async def fifth_block_handler(callback: CallbackQuery):
-        await process_fifth_block_theory(callback, bot, data)
-    
-    async def sixth_block_handler(callback: CallbackQuery):
-        await process_sixth_block_theory(callback, bot, data)
-    
+    # Команда /theory
+    @dispatcher.message(Command("theory"))
+    async def theory_handler(message: Message):
+        await theory_command(message, shared_data)
+
+    # Конфигурация блоков теории
+    THEORY_BLOCKS_CONFIG = [
+        {
+            "index": 0,
+            "theme_folder": "FirstTheme",
+            "image_count": 13,
+            "sequence": [1, 0, 1, 0, 0, 1, 1, 0, 1, 0, 1, 0, 1, 0, 1, 1, 1, 1]
+        },
+        {
+            "index": 1,
+            "theme_folder": "SecondTheme",
+            "image_count": 10,
+            "sequence": [0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 1, 1]
+        },
+        {
+            "index": 2,
+            "theme_folder": "ThirdTheme",
+            "image_count": 8,
+            "sequence": [0, 1, 1, 0, 1, 1, 1, 0, 1, 1, 1]
+        },
+        {
+            "index": 3,
+            "theme_folder": "FourthTheme",
+            "image_count": 12,
+            "sequence": [0, 1, 0, 1, 0, 1, 1, 0, 1, 0, 1, 0, 1, 1, 1, 1]
+        },
+        {
+            "index": 4,
+            "theme_folder": "FifthTheme",
+            "image_count": 6,
+            "sequence": [0, 1, 0, 1, 0, 1, 0, 1, 1, 1]
+        },
+        {
+            "index": 5,
+            "theme_folder": "SixthTheme",
+            "image_count": 7,
+            "sequence": [0, 0, 0, 0, 0, 1, 0, 0]
+        }
+    ]
+
+    # Регистрация обработчиков для каждого блока
+    for block_config in THEORY_BLOCKS_CONFIG:
+        idx = block_config["index"]
+        
+        @dispatcher.callback_query(F.data == f"{THEORY_CALLBACK}_{idx}")
+        async def block_handler(callback: CallbackQuery, bc=block_config):
+            await process_block_theory(
+                callback,
+                bot_instance,
+                shared_data,
+                bc["index"],
+                bc["theme_folder"],
+                bc["image_count"],
+                bc["sequence"]
+            )
+
+    # Обработчик возврата
+    @dispatcher.callback_query(F.data == BACK_TO_THEORY)
     async def back_handler(callback: CallbackQuery):
-        await back_to_theory(callback, data)
-    
-    # Регистрация обработчиков выбора блоков теории
-    dp.callback_query.register(first_block_handler, F.data == f"{THEORY_CALLBACK}_0")
-    dp.callback_query.register(second_block_handler, F.data == f"{THEORY_CALLBACK}_1")
-    dp.callback_query.register(third_block_handler, F.data == f"{THEORY_CALLBACK}_2")
-    dp.callback_query.register(fourth_block_handler, F.data == f"{THEORY_CALLBACK}_3")
-    dp.callback_query.register(fifth_block_handler, F.data == f"{THEORY_CALLBACK}_4")
-    dp.callback_query.register(sixth_block_handler, F.data == f"{THEORY_CALLBACK}_5")
-    
-    # Регистрация обработчика возврата
-    dp.callback_query.register(back_handler, F.data == BACK_TO_THEORY)
+        await back_to_theory(callback, shared_data)
